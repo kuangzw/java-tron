@@ -734,14 +734,13 @@ public class Manager {
         }
 
         try (ISession tmpSession = revokingStore.buildSession()) {
-          // evm虚拟机处理交易
           processTransaction(trx, null);
+          TransactionTrace trxTrace = trx.getTrxTrace();
           trx.setTrxTrace(null);
-          // 添加到队列中
           pendingTransactions.add(trx);
           tmpSession.merge();
           
-          proccessTransactionHook(trx, pendingTransactions);
+          proccessTransactionHook(trx, trxTrace, pendingTransactions);
         }
         if (isShieldedTransaction(trx.getInstance())) {
           shieldedTransInPendingCounts.incrementAndGet();
@@ -753,11 +752,11 @@ public class Manager {
     return true;
   }
   
-  public void proccessTransactionHook(TransactionCapsule trx, BlockingQueue<TransactionCapsule> queue){ 
+  public void proccessTransactionHook(TransactionCapsule trx, TransactionTrace trxTrace, BlockingQueue<TransactionCapsule> queue){ 
 	if(AbstractApplicationHook.getInstance() == null) {
 		return ;
 	}
-    AbstractApplicationHook.getInstance().processTransaction(trx, queue);
+    AbstractApplicationHook.getInstance().processTransaction(trx, trxTrace, queue);
   }
 
   public void proccessNewBlockHook(BlockCapsule newBlock){ 

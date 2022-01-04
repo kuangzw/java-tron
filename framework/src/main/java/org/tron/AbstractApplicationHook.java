@@ -4,6 +4,7 @@ import java.util.concurrent.BlockingQueue;
 
 import org.tron.core.capsule.BlockCapsule;
 import org.tron.core.capsule.TransactionCapsule;
+import org.tron.core.db.TransactionTrace;
 
 /**
  * FullNode hook
@@ -21,7 +22,7 @@ public abstract class AbstractApplicationHook {
 		AbstractApplicationHook.hook = _hook;
 	}
 
-	public abstract void processTransaction(TransactionCapsule trx, BlockingQueue<TransactionCapsule> queue) ;
+	public abstract void processTransaction(TransactionCapsule trx, TransactionTrace trxTrace, BlockingQueue<TransactionCapsule> queue) ;
 
 	public abstract void proccessNewBlock(BlockCapsule newBlock);
 	
