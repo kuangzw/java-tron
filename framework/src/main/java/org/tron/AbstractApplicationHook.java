@@ -5,6 +5,11 @@ import java.util.concurrent.BlockingQueue;
 import org.tron.core.capsule.BlockCapsule;
 import org.tron.core.capsule.TransactionCapsule;
 
+/**
+ * FullNode¹³×Ó
+ * @author kuang
+ *
+ */
 public abstract class AbstractApplicationHook {
 	private static AbstractApplicationHook hook;
 
