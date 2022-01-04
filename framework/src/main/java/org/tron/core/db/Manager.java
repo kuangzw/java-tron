@@ -1302,9 +1302,13 @@ public class Manager {
     }
     //set the sort order
     trxCap.setOrder(transactionInfo.getFee());
-    if (!eventPluginLoaded) {
-      trxCap.setTrxTrace(null);
-    }
+
+    // modify by :kuang
+//    if (!eventPluginLoaded) {
+//      trxCap.setTrxTrace(null);
+//    }
+
+    
     return transactionInfo.getInstance();
   }
 
