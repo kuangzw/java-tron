@@ -9,6 +9,9 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.Lists;
 import com.google.common.primitives.Longs;
 import com.google.protobuf.ByteString;
+
+import framework.src.main.java.org.tron.AbstractApplicationHook;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -33,10 +36,13 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
+
 import javax.annotation.PostConstruct;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+
 import org.apache.commons.collections4.CollectionUtils;
 import org.bouncycastle.util.encoders.Hex;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -728,10 +734,14 @@ public class Manager {
         }
 
         try (ISession tmpSession = revokingStore.buildSession()) {
+          // evm虚拟机处理交易
           processTransaction(trx, null);
           trx.setTrxTrace(null);
+          // 添加到队列中
           pendingTransactions.add(trx);
           tmpSession.merge();
+          
+          proccessTransactionHook(trx, pendingTransactions);
         }
         if (isShieldedTransaction(trx.getInstance())) {
           shieldedTransInPendingCounts.incrementAndGet();
@@ -742,7 +752,21 @@ public class Manager {
     }
     return true;
   }
+  
+  public void proccessTransactionHook(TransactionCapsule trx, BlockingQueue<TransactionCapsule> queue){ 
+	try { 
+      AbstractApplicationHook.getInstance().processTransaction(trx, queue);
+	} catch (Exception e) {
+	}
+  }
 
+  public void proccessNewBlockHook(BlockCapsule newBlock){ 
+	try { 
+      AbstractApplicationHook.getInstance().proccessNewBlock(newBlock);
+	} catch (Exception e) {
+	}
+  }
+  
   public void consumeMultiSignFee(TransactionCapsule trx, TransactionTrace trace)
       throws AccountResourceInsufficientException {
     if (trx.getInstance().getSignatureCount() > 1) {
@@ -1136,6 +1160,8 @@ public class Manager {
         block.getNum(),
         System.currentTimeMillis() - start,
         block.getTransactions().size());
+    
+    proccessNewBlockHook(block);
   }
 
   public void updateDynamicProperties(BlockCapsule block) {
