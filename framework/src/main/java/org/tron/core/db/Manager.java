@@ -736,6 +736,7 @@ public class Manager {
         try (ISession tmpSession = revokingStore.buildSession()) {
           processTransaction(trx, null);
           TransactionTrace trxTrace = trx.getTrxTrace();
+          logger.info("trxTrace : "+(trxTrace == null));
           trx.setTrxTrace(null);
           pendingTransactions.add(trx);
           tmpSession.merge();
