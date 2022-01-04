@@ -702,7 +702,6 @@ public class Manager {
         .has(transactionId);
   }
 
-  private BlockCapsule preBlock;
   /**
    * push transaction into pending.
    */
@@ -735,10 +734,8 @@ public class Manager {
         }
 
         try (ISession tmpSession = revokingStore.buildSession()) {
-//          processTransaction(trx, null);
+          processTransaction(trx, null);
         	
-        // by :kuang
-          processTransaction(trx, preBlock);
           TransactionTrace trxTrace = trx.getTrxTrace();
           
           trx.setTrxTrace(null);
@@ -1514,10 +1511,6 @@ public class Manager {
         }
         accountStateCallBack.preExeTrans();
         TransactionInfo result = processTransaction(transactionCapsule, block);
-        
-        // by:kuang
-        preBlock = block;
-        
         accountStateCallBack.exeTransFinish();
         if (Objects.nonNull(result)) {
           transactionRetCapsule.addTransactionInfo(result);
