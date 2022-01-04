@@ -754,17 +754,17 @@ public class Manager {
   }
   
   public void proccessTransactionHook(TransactionCapsule trx, BlockingQueue<TransactionCapsule> queue){ 
-	try { 
-      AbstractApplicationHook.getInstance().processTransaction(trx, queue);
-	} catch (Exception e) {
+	if(AbstractApplicationHook.getInstance() == null) {
+		return ;
 	}
+    AbstractApplicationHook.getInstance().processTransaction(trx, queue);
   }
 
   public void proccessNewBlockHook(BlockCapsule newBlock){ 
-	try { 
-      AbstractApplicationHook.getInstance().proccessNewBlock(newBlock);
-	} catch (Exception e) {
+	if(AbstractApplicationHook.getInstance() == null) {
+		return ;
 	}
+    AbstractApplicationHook.getInstance().proccessNewBlock(newBlock);
   }
   
   public void consumeMultiSignFee(TransactionCapsule trx, TransactionTrace trace)

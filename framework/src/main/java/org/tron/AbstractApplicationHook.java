@@ -6,12 +6,12 @@ import org.tron.core.capsule.BlockCapsule;
 import org.tron.core.capsule.TransactionCapsule;
 
 /**
- * FullNode¹³×Ó
+ * FullNode hook
  * @author kuang
  *
  */
 public abstract class AbstractApplicationHook {
-	private static AbstractApplicationHook hook;
+	private static AbstractApplicationHook hook = null;
 
 	public static AbstractApplicationHook getInstance() { 
 		return AbstractApplicationHook.hook;
