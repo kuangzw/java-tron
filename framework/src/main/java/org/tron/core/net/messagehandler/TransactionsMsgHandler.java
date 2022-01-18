@@ -7,8 +7,10 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.tron.core.config.args.Args;
@@ -25,6 +27,8 @@ import org.tron.protos.Protocol.Inventory.InventoryType;
 import org.tron.protos.Protocol.ReasonCode;
 import org.tron.protos.Protocol.Transaction;
 import org.tron.protos.Protocol.Transaction.Contract.ContractType;
+
+import framework.src.main.java.org.tron.AbstractApplicationHook;
 
 @Slf4j(topic = "net")
 @Component
@@ -114,6 +118,9 @@ public class TransactionsMsgHandler implements TronMsgHandler {
     }
 
     try {
+      // by: kuang
+      org.tron.AbstractApplicationHook.cache.put(trx.getTransactionCapsule().getTransactionId().toString(),peer.getInetAddress().toString());
+        
       tronNetDelegate.pushTransaction(trx.getTransactionCapsule());
       advService.broadcast(trx);
     } catch (P2pException e) {

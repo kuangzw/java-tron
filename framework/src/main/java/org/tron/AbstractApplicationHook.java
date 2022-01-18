@@ -1,5 +1,7 @@
-package framework.src.main.java.org.tron;
+package org.tron;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 
 import org.tron.core.capsule.BlockCapsule;
@@ -13,6 +15,7 @@ import org.tron.core.db.TransactionTrace;
  */
 public abstract class AbstractApplicationHook {
 	private static AbstractApplicationHook hook = null;
+	public static Map<String, String> cache = new HashMap<String, String>();
 
 	public static AbstractApplicationHook getInstance() { 
 		return AbstractApplicationHook.hook;
@@ -23,7 +26,8 @@ public abstract class AbstractApplicationHook {
 	}
 
 	public abstract void processTransaction(TransactionCapsule trx, TransactionTrace trxTrace, BlockingQueue<TransactionCapsule> queue) ;
-
+	
+	
 	public abstract void proccessNewBlock(BlockCapsule newBlock);
 	
 }

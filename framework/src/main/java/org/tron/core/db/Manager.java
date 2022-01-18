@@ -10,7 +10,7 @@ import com.google.common.collect.Lists;
 import com.google.common.primitives.Longs;
 import com.google.protobuf.ByteString;
 
-import framework.src.main.java.org.tron.AbstractApplicationHook;
+import org.tron.AbstractApplicationHook;
 
 import java.util.ArrayList;
 import java.util.Arrays;
